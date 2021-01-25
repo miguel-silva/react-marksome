@@ -1,6 +1,8 @@
 {
   "version": "0.1.0",
   "license": "MIT",
+  "repository": "github:miguel-silva/react-marksome",
+  "description": "Lightweight, flexible and readable labels in React using a subset of markdown",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
@@ -13,8 +15,8 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
-    "test": "tsdx test --passWithNoTests",
-    "lint": "tsdx lint",
+    "test": "tsdx test",
+    "lint": "tsdx lint src test stories",
     "prepare": "tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why",
@@ -22,7 +24,7 @@
     "build-storybook": "build-storybook"
   },
   "peerDependencies": {
-    "react": ">=16"
+    "react": ">=16.8.0"
   },
   "husky": {
     "hooks": {
@@ -41,21 +43,23 @@
   "size-limit": [
     {
       "path": "dist/react-marksome.cjs.production.min.js",
-      "limit": "10 KB"
+      "limit": "1.5 KB"
     },
     {
       "path": "dist/react-marksome.esm.js",
-      "limit": "10 KB"
+      "limit": "1.5 KB"
     }
   ],
   "devDependencies": {
     "@babel/core": "^7.12.10",
+    "@emotion/css": "^11.1.3",
     "@size-limit/preset-small-lib": "^4.9.1",
     "@storybook/addon-essentials": "^6.1.15",
     "@storybook/addon-info": "^5.3.21",
     "@storybook/addon-links": "^6.1.15",
     "@storybook/addons": "^6.1.15",
     "@storybook/react": "^6.1.15",
+    "@testing-library/react": "^11.2.3",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "babel-loader": "^8.2.2",
