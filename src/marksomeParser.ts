@@ -30,59 +30,61 @@ type ReferenceLinkMatch = {
   reference: string;
 };
 
-const STRONG_TEXT_REGEXP = /([*_])\1\1?((?:\[.*?\][([].*?[)\]]|<.*?>(?:.*?<.*?>)?|`.*?`|~+.*?~+|.)*?)\1?\1\1/g;
+const STRONG_TEXT_REGEXP = /([*_])\1\1?((?:\[.*?\][([].*?[)\]]|.)*?)\1?\1\1/g;
 
-const EMPHASIZED_TEXT_REGEXP = /([*_])((?:\[.*?\][([].*?[)\]]|<.*?>(?:.*?<.*?>)?|`.*?`|~+.*?~+|.)*?)\1/g;
+const EMPHASIZED_TEXT_REGEXP = /([*_])((?:\[.*?\][([].*?[)\]]|.)*?)\1/g;
 
 const REFERENCE_LINK_TEXT_REGEXP = /\[([^\]]*)\] ?\[([^\]]*)\]/g;
 
 export function parseSegments(text: string): Segment[] {
   const matches: Match[] = [];
 
-  for (const referenceLinkRegExpMatch of text.matchAll(
-    REFERENCE_LINK_TEXT_REGEXP
-  )) {
-    const innerText = referenceLinkRegExpMatch[1];
-    const reference = referenceLinkRegExpMatch[2];
-    const startIndex = referenceLinkRegExpMatch.index;
+  Array.from(text.matchAll(REFERENCE_LINK_TEXT_REGEXP)).forEach(
+    (referenceLinkRegExpMatch) => {
+      const innerText = referenceLinkRegExpMatch[1];
+      const reference = referenceLinkRegExpMatch[2];
+      const startIndex = referenceLinkRegExpMatch.index;
 
-    if (!innerText || !reference || startIndex == null) {
-      continue;
-    }
+      if (!innerText || !reference || startIndex == null) {
+        return;
+      }
 
-    const endIndex = startIndex + referenceLinkRegExpMatch[0].length;
+      const endIndex = startIndex + referenceLinkRegExpMatch[0].length;
 
-    matches.push({
-      type: 'reference-link',
-      innerText,
-      reference,
-      startIndex,
-      endIndex,
-      offset: 1,
-    });
-  }
+      matches.push({
+        type: 'reference-link',
+        innerText,
+        reference,
+        startIndex,
+        endIndex,
+        offset: 1,
+      });
+    },
+  );
 
-  for (const strongRegExpMatch of text.matchAll(STRONG_TEXT_REGEXP)) {
+  Array.from(text.matchAll(STRONG_TEXT_REGEXP)).forEach((strongRegExpMatch) => {
     const inlineMatch = getInlineMatchFromRegexpMatch(
       strongRegExpMatch,
-      'strong'
+      'strong',
     );
 
     if (inlineMatch) {
       matches.push(inlineMatch);
     }
-  }
+  });
 
-  for (const emphasisRegExpMatch of text.matchAll(EMPHASIZED_TEXT_REGEXP)) {
-    const inlineMatch = getInlineMatchFromRegexpMatch(
-      emphasisRegExpMatch,
-      'emphasis'
-    );
+  Array.from(text.matchAll(EMPHASIZED_TEXT_REGEXP)).forEach(
+    (emphasisRegExpMatch) => {
+      const inlineMatch = getInlineMatchFromRegexpMatch(
+        emphasisRegExpMatch,
+        'emphasis',
+      );
 
-    if (inlineMatch) {
-      matches.push(inlineMatch);
-    }
-  }
+      if (inlineMatch) {
+        matches.push(inlineMatch);
+      }
+    },
+  );
 
   matches.sort((a, b) => a.startIndex - b.startIndex);
 
@@ -91,7 +93,7 @@ export function parseSegments(text: string): Segment[] {
 
 function getInlineMatchFromRegexpMatch(
   regexpMatch: RegExpMatchArray,
-  inlineType: 'strong' | 'emphasis'
+  inlineType: 'strong' | 'emphasis',
 ): InlineStyleMatch | undefined {
   const startIndex = regexpMatch.index;
 
@@ -136,7 +138,7 @@ function getSegmentsFromMatches(text: string, matches: Match[]): Segment[] {
     for (let i = 0; i < matches.length; ) {
       const otherMatch = matches[i];
 
-      // if not an inner match, continue to the next;
+      // if not an inner match, continue to the next
       if (otherMatch.endIndex > currentMatch.endIndex) {
         i++;
 
@@ -146,18 +148,15 @@ function getSegmentsFromMatches(text: string, matches: Match[]): Segment[] {
       // remove it from matches
       matches.splice(i, 1);
 
-      const innerMatch: Match = {
-        ...otherMatch,
-        startIndex: otherMatch.startIndex - currentMatchTextStart,
-        endIndex: otherMatch.endIndex - currentMatchTextStart,
-      };
+      otherMatch.startIndex -= currentMatchTextStart;
+      otherMatch.endIndex -= currentMatchTextStart;
 
-      innerMatches.push(innerMatch);
+      innerMatches.push(otherMatch);
     }
 
     const content = getSegmentsFromMatches(
       currentMatch.innerText,
-      innerMatches
+      innerMatches,
     );
 
     if (currentMatch.type === 'reference-link') {

@@ -1,7 +1,20 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { Marksome } from '../src';
-import { mixedInlineStylesFixture, referenceLinkFixture } from './fixtures';
+import {
+  diverseInlineStylesFixtureList,
+  mixedInlineStylesFixture,
+  referenceLinkFixture,
+} from './fixtures';
+
+test.each(diverseInlineStylesFixtureList)(
+  `renders '%p' as expected`,
+  (text) => {
+    const { asFragment } = render(<Marksome text={text} />);
+
+    expect(asFragment()).toMatchSnapshot();
+  },
+);
 
 test('renders mixed inline styles as expected', () => {
   const { asFragment } = render(<Marksome text={mixedInlineStylesFixture} />);
@@ -81,6 +94,26 @@ test('renders reference link as expected', () => {
           </strong>
            out
         </a>
+        !
+      </span>
+    </DocumentFragment>
+  `);
+});
+
+test('renders reference link fallback, when the respective reference is missing, as expected', () => {
+  const { asFragment } = render(<Marksome text={referenceLinkFixture.text} />);
+
+  expect(asFragment()).toMatchInlineSnapshot(`
+    <DocumentFragment>
+      <span>
+        For wider markdown support, 
+        <span>
+          check 
+          <strong>
+            markdown-to-jsx
+          </strong>
+           out
+        </span>
         !
       </span>
     </DocumentFragment>

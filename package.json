@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "repository": "github:miguel-silva/react-marksome",
   "description": "Lightweight, flexible and readable labels in React using a subset of markdown",
@@ -10,7 +10,7 @@
     "src"
   ],
   "engines": {
-    "node": ">=10"
+    "node": ">=12"
   },
   "scripts": {
     "start": "tsdx watch",
@@ -32,10 +32,8 @@
     }
   },
   "prettier": {
-    "printWidth": 80,
-    "semi": true,
     "singleQuote": true,
-    "trailingComma": "es5"
+    "trailingComma": "all"
   },
   "name": "react-marksome",
   "author": "Miguel Silva",
@@ -43,11 +41,11 @@
   "size-limit": [
     {
       "path": "dist/react-marksome.cjs.production.min.js",
-      "limit": "1.5 KB"
+      "limit": "1 KB"
     },
     {
       "path": "dist/react-marksome.esm.js",
-      "limit": "1.5 KB"
+      "limit": "1 KB"
     }
   ],
   "devDependencies": {
