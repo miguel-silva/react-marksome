@@ -1,0 +1,121 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders '"***both***"' as expected 1`] = `
+<DocumentFragment>
+  <span>
+    <strong>
+      <em>
+        both
+      </em>
+    </strong>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`renders '"***emphasized within* strong**"' as expected 1`] = `
+<DocumentFragment>
+  <span>
+    <strong>
+      <em>
+        emphasized within
+      </em>
+       strong
+    </strong>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`renders '"***strong within** emphasized*"' as expected 1`] = `
+<DocumentFragment>
+  <span>
+    <strong>
+      <em>
+        strong within
+      </em>
+    </strong>
+    <em>
+       emphasized
+    </em>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`renders '"**strong with ***a break of emphasized*** in the middle**"' as expected 1`] = `
+<DocumentFragment>
+  <span>
+    <strong>
+      strong with 
+    </strong>
+    <em>
+      a break of emphasized
+    </em>
+    <strong>
+       in the middle
+    </strong>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`renders '"**strong with *a bit of emphasized***"' as expected 1`] = `
+<DocumentFragment>
+  <span>
+    <strong>
+      strong with 
+      <em>
+        a bit of emphasized
+      </em>
+    </strong>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`renders '"**strong**"' as expected 1`] = `
+<DocumentFragment>
+  <span>
+    <strong>
+      strong
+    </strong>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`renders '"*emphasized with ***a break of strong*** in the middle*"' as expected 1`] = `
+<DocumentFragment>
+  <span>
+    <em>
+      emphasized with 
+    </em>
+    <strong>
+      a break of strong
+    </strong>
+    <em>
+       in the middle
+    </em>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`renders '"*emphasized with **a bit of strong***"' as expected 1`] = `
+<DocumentFragment>
+  <span>
+    <em>
+      emphasized with 
+    </em>
+    <strong>
+      <em>
+        a bit of strong
+      </em>
+    </strong>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`renders '"*emphasized*"' as expected 1`] = `
+<DocumentFragment>
+  <span>
+    <em>
+      emphasized
+    </em>
+  </span>
+</DocumentFragment>
+`;

@@ -24,13 +24,9 @@ function Demo() {
 }
 ```
 
-renders
-
-...
+renders the following line:
 
 The _quick_ _brown_ **fox** jumps over the _lazy_ **dog**. [Wikipedia]("https://en.wikipedia.org/wiki/The_quick_brown_fox_jumps_over_the_lazy_dog")
-
-...
 
 For more examples, see the [stories](./stories/Marksome.stories.tsx).
 
@@ -47,7 +43,7 @@ By restricting ourselves to only support some markdown we're able to:
 - build a light package ([bundlephobia](https://bundlephobia.com/result?p=react-marksome))
 - that provides a flexible, readable and condensed format for singleline pieces of text
 
-Additionally we build out a tree of segments instead of simply using string replacement mostly for future extensibility and configuratility, like being able to render segments with custom React components (WIP).
+Additionally, we build out a tree of segments instead of simply using string replacement mostly for future extensibility and configuratility, like being able to render segments with custom React components (WIP).
 
 All of the above means that users don't need to worry about escaping the text since:
 
@@ -63,11 +59,9 @@ If you're looking for wider markdown support:
 
 ## Commands
 
-This project was bootstrapped with [TSDX](https://github.com/formium/tsdx). Check the docs for more info on the commands.
+This project was bootstrapped with [TSDX](https://github.com/formium/tsdx). Check its docs for more info on the commands.
 
 ### Storybook
-
-Run inside another terminal:
 
 ```bash
 npm run storybook

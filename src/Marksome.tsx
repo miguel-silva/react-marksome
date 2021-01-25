@@ -16,7 +16,7 @@ export default function Marksome({ text, references, ...spanProps }: Props) {
 
 function renderSegments(
   segments: Segment[],
-  references?: Record<string, string>
+  references?: Record<string, string>,
 ): ReactNode {
   return segments.map((segment, segmentIndex) => {
     if (typeof segment === 'string') {
@@ -45,7 +45,7 @@ function renderSegments(
           if (process.env.NODE_ENV === 'development') {
             // eslint-disable-next-line no-console
             console.warn(
-              `Marksome: ${segment.reference} for reference-link is missing from references prop. Falling back to span.`
+              `Marksome: ${segment.reference} for reference-link is missing from references prop. Falling back to span.`,
             );
           }
 

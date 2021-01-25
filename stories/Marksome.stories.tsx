@@ -12,7 +12,7 @@ export default {
   component: Marksome,
 };
 
-export function Samples() {
+export function DiverseInlineStyles() {
   return (
     <div
       className={css`
@@ -79,21 +79,11 @@ export function ReferenceLink() {
                   <dd>{value}</dd>
                 </Fragment>
               );
-            }
+            },
           )}
         </dl>
       </p>
       <Marksome {...referenceLinkFixture} />
-    </>
-  );
-}
-
-export function MissingReferences() {
-  return (
-    <>
-      <p>{referenceLinkFixture.text}</p>
-
-      <Marksome text={referenceLinkFixture.text} />
     </>
   );
 }
