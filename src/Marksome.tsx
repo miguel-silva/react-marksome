@@ -1,12 +1,23 @@
-import React, { HTMLAttributes, ReactNode, useMemo } from 'react';
+import React, { HTMLAttributes, Key, ReactNode, useMemo } from 'react';
 import { parseSegments, Segment } from './marksomeParser';
 
-type Props = HTMLAttributes<HTMLSpanElement> & {
+export type ReferenceRenderFunction = (
+  key: Key,
+  children: ReactNode,
+) => ReactNode;
+
+export type References = Record<string, string | ReferenceRenderFunction>;
+
+export type MarksomeProps = HTMLAttributes<HTMLSpanElement> & {
   text: string;
-  references?: Record<string, string>;
+  references?: References;
 };
 
-export default function Marksome({ text, references, ...spanProps }: Props) {
+export default function Marksome({
+  text,
+  references,
+  ...spanProps
+}: MarksomeProps) {
   const segments = useMemo(() => {
     return parseSegments(text);
   }, [text]);
@@ -16,7 +27,7 @@ export default function Marksome({ text, references, ...spanProps }: Props) {
 
 function renderSegments(
   segments: Segment[],
-  references?: Record<string, string>,
+  references?: References,
 ): ReactNode {
   return segments.map((segment, segmentIndex) => {
     if (typeof segment === 'string') {
@@ -39,9 +50,11 @@ function renderSegments(
         );
 
       case 'reference-link': {
-        const href = references?.[segment.reference];
+        const referenceValue = references?.[segment.reference];
 
-        if (!href) {
+        const children = renderSegments(segment.content, references);
+
+        if (!referenceValue) {
           if (process.env.NODE_ENV === 'development') {
             // eslint-disable-next-line no-console
             console.warn(
@@ -49,18 +62,18 @@ function renderSegments(
             );
           }
 
+          return <span key={segmentIndex}>{children}</span>;
+        }
+
+        if (typeof referenceValue === 'string') {
           return (
-            <span key={segmentIndex}>
-              {renderSegments(segment.content, references)}
-            </span>
+            <a key={segmentIndex} href={referenceValue}>
+              {children}
+            </a>
           );
         }
 
-        return (
-          <a key={segmentIndex} href={href}>
-            {renderSegments(segment.content, references)}
-          </a>
-        );
+        return referenceValue(segmentIndex, children);
       }
       default:
         return null;

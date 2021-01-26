@@ -64,6 +64,7 @@
     "husky": "^4.3.8",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-icons": "^4.1.0",
     "react-is": "^17.0.1",
     "size-limit": "^4.9.1",
     "tsdx": "^0.14.1",

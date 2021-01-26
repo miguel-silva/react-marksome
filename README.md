@@ -15,7 +15,7 @@ function Demo() {
   const text =
     'The *quick* *brown* **fox** jumps over the *lazy* **dog**. [Wikipedia][1]';
 
-  const references = {
+  const references: References = {
     '1':
       'https://en.wikipedia.org/wiki/The_quick_brown_fox_jumps_over_the_lazy_dog',
   };
@@ -30,6 +30,56 @@ The _quick_ _brown_ **fox** jumps over the _lazy_ **dog**. [Wikipedia]("https://
 
 For more examples, see the [stories](./stories/Marksome.stories.tsx).
 
+## API
+
+### Marksome component
+
+React component that parses and renders a subset of markdown.
+
+It expects the markdown text to be provided via a `text` prop, which then is combined with reference links (`[label][reference]`)defined under the `references` prop.
+
+#### Props
+
+```ts
+type MarksomeProps = HTMLAttributes<HTMLSpanElement> & {
+  text: string;
+  references?: References;
+};
+
+type References = Record<string, string | ReferenceRenderFunction>;
+
+type ReferenceRenderFunction = (key: Key, children: ReactNode) => ReactNode;
+```
+
+#### Basic usage
+
+See [Quick start](#quick-start).
+
+#### Custom components
+
+One can actually render custom components in the place of reference links by providing a render function instead of link url:
+
+```tsx
+function CustomComponentsDemo() {
+  const text = 'The following is an actual button: [*Howdie*][greeting-button]';
+
+  const references: References = {
+    'greeting-button': (key, children) => (
+      <button
+        key={key}
+        onClick={() => {
+          alert('Hello!');
+        }}
+      >
+        {children}
+      </button>
+    ),
+  };
+
+  return <Marksome text={text} references={references} />;
+}
+```
+
 ## Rationale
 
 The current subset of markdown that is supported is:
@@ -43,7 +93,7 @@ By restricting ourselves to only support some markdown we're able to:
 - build a light package ([bundlephobia](https://bundlephobia.com/result?p=react-marksome))
 - that provides a flexible, readable and condensed format for singleline pieces of text
 
-Additionally, we build out a tree of segments instead of simply using string replacement mostly for future extensibility and configuratility, like being able to render segments with custom React components (WIP).
+Additionally, we build out a tree of segments instead of simply using string replacement mostly for extensibility and configuratility, like being able to render segments with [custom React components](#custom-components).
 
 All of the above means that users don't need to worry about escaping the text since:
 

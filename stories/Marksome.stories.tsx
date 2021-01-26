@@ -5,10 +5,11 @@ import {
   mixedInlineStylesFixture,
   diverseInlineStylesFixtureList,
   referenceLinkFixture,
+  customComponentsFixture,
 } from '../test/fixtures';
 
 export default {
-  title: 'react-marksome',
+  title: 'Marksome',
   component: Marksome,
 };
 
@@ -62,15 +63,7 @@ export function ReferenceLink() {
     <>
       <p>
         {referenceLinkFixture.text}
-        <dl
-          className={css`
-            display: grid;
-            grid-gap: 5px 3px;
-            grid-template-columns: max-content max-content;
-
-            margin-top: 5px;
-          `}
-        >
+        <dl className={descriptionListStyle}>
           {Object.entries(referenceLinkFixture.references).map(
             ([key, value]) => {
               return (
@@ -87,3 +80,28 @@ export function ReferenceLink() {
     </>
   );
 }
+
+export function CustomComponents() {
+  return (
+    <>
+      <p>
+        {customComponentsFixture.text}
+        <dl className={descriptionListStyle}>
+          <dt>md-icon:</dt>
+          <dd>{`(key, children) => <DiMarkdown key={key} title={String(children)}/>`}</dd>
+          <dt>greeting-button:</dt>
+          <dd>{`(key, children) => <button key={key} onClick={()=>alert('Hello!')}>{children}</button>`}</dd>
+        </dl>
+      </p>
+      <Marksome {...customComponentsFixture} />
+    </>
+  );
+}
+
+const descriptionListStyle = css`
+  display: grid;
+  grid-gap: 5px 3px;
+  grid-template-columns: max-content max-content;
+
+  margin-top: 5px;
+`;
