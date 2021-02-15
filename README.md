@@ -28,7 +28,7 @@ renders the following line:
 
 The _quick_ _brown_ **fox** jumps over the _lazy_ **dog**. [Wikipedia]("https://en.wikipedia.org/wiki/The_quick_brown_fox_jumps_over_the_lazy_dog")
 
-For more examples, see the [stories](./stories/Marksome.stories.tsx).
+For more examples, see the [stories](./stories/Marksome.stories.tsx) together with related [fixtures](./test/fixtures.ts).
 
 ## API
 
@@ -99,6 +99,42 @@ All of the above means that users don't need to worry about escaping the text si
 
 - it relies on regular React components instead of injecting HTML via [dangerouslySetInnerHTML](https://reactjs.org/docs/dom-elements.html#dangerouslysetinnerhtml)
 - the only way to inject a link is via a separate references object.
+
+## Supported browsers
+
+The following [browserslist](https://github.com/browserslist/browserslist) is supported without the need of any polyfills:
+
+<details>
+  <summary>>0.25% or last 2 major versions and supports es6-module</summary>
+
+  <p><strong>caniuse-lite db date: 15/02/2020</strong></p>
+  <ul>
+    <li>and_chr 87</li>
+    <li>and_ff 83</li>
+    <li>and_qq 10.4</li>
+    <li>android 81</li>
+    <li>chrome 87</li>
+    <li>chrome 86</li>
+    <li>chrome 85</li>
+    <li>edge 87</li>
+    <li>edge 86</li>
+    <li>firefox 84</li>
+    <li>firefox 83</li>
+    <li>ios_saf 14.0-14.3</li>
+    <li>ios_saf 13.4-13.7</li>
+    <li>ios_saf 13.3</li>
+    <li>ios_saf 13.2</li>
+    <li>ios_saf 13.0-13.1</li>
+    <li>ios_saf 12.2-12.4</li>
+    <li>opera 72</li>
+    <li>opera 71</li>
+    <li>safari 14</li>
+    <li>safari 13.1</li>
+    <li>safari 13</li>
+    <li>samsung 13.0</li>
+    <li>samsung 12.0</li>
+  </ul>
+</details>
 
 ## Alternatives
 
