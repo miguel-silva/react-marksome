@@ -1,5 +1,7 @@
 # react-marksome
 
+[![npm](https://img.shields.io/npm/v/react-marksome)](https://www.npmjs.com/package/react-marksome) [![npm bundle size](https://img.shields.io/bundlephobia/minzip/react-marksome)](https://bundlephobia.com/result?p=react-marksome)
+
 Parses some markdown, builds a tree of segments and renders them in React.
 
 It was designed for adding basic support for styling and links to singleline strings.
@@ -7,6 +9,14 @@ It was designed for adding basic support for styling and links to singleline str
 See [Rationale](#rationale) for more info.
 
 ## Quick start
+
+Install:
+
+```sh
+npm i react-markdown
+```
+
+Import and render the Marksome component:
 
 ```tsx
 import { Marksome } from 'react-marksome';
