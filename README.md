@@ -107,33 +107,33 @@ The following [browserslist](https://github.com/browserslist/browserslist) is su
 <details>
   <summary>>0.25% or last 2 major versions and supports es6-module</summary>
 
-  <p style="white-space: pre">
-  <strong>caniuse-lite db date: 15/02/2020</strong>
-  and_chr 87
-  and_ff 83
-  and_qq 10.4
-  android 81
-  chrome 87
-  chrome 86
-  chrome 85
-  edge 87
-  edge 86
-  firefox 84
-  firefox 83
-  ios_saf 14.0-14.3
-  ios_saf 13.4-13.7
-  ios_saf 13.3
-  ios_saf 13.2
-  ios_saf 13.0-13.1
-  ios_saf 12.2-12.4
-  opera 72
-  opera 71
-  safari 14
-  safari 13.1
-  safari 13
-  samsung 13.0
-  samsung 12.0
-  </p>
+  <p><strong>caniuse-lite db date: 15/02/2020</strong></p>
+  <ul>
+    <li>and_chr 87</li>
+    <li>and_ff 83</li>
+    <li>and_qq 10.4</li>
+    <li>android 81</li>
+    <li>chrome 87</li>
+    <li>chrome 86</li>
+    <li>chrome 85</li>
+    <li>edge 87</li>
+    <li>edge 86</li>
+    <li>firefox 84</li>
+    <li>firefox 83</li>
+    <li>ios_saf 14.0-14.3</li>
+    <li>ios_saf 13.4-13.7</li>
+    <li>ios_saf 13.3</li>
+    <li>ios_saf 13.2</li>
+    <li>ios_saf 13.0-13.1</li>
+    <li>ios_saf 12.2-12.4</li>
+    <li>opera 72</li>
+    <li>opera 71</li>
+    <li>safari 14</li>
+    <li>safari 13.1</li>
+    <li>safari 13</li>
+    <li>samsung 13.0</li>
+    <li>samsung 12.0</li>
+  </ul>
 </details>
 
 ## Alternatives
