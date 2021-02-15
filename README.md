@@ -28,7 +28,7 @@ renders the following line:
 
 The _quick_ _brown_ **fox** jumps over the _lazy_ **dog**. [Wikipedia]("https://en.wikipedia.org/wiki/The_quick_brown_fox_jumps_over_the_lazy_dog")
 
-For more examples, see the [stories](./stories/Marksome.stories.tsx).
+For more examples, see the [stories](./stories/Marksome.stories.tsx) together with related [fixtures](./test/fixtures.ts).
 
 ## API
 
@@ -99,6 +99,42 @@ All of the above means that users don't need to worry about escaping the text si
 
 - it relies on regular React components instead of injecting HTML via [dangerouslySetInnerHTML](https://reactjs.org/docs/dom-elements.html#dangerouslysetinnerhtml)
 - the only way to inject a link is via a separate references object.
+
+## Supported browsers
+
+The following [browserslist](https://github.com/browserslist/browserslist) is supported without the need of any polyfills:
+
+<details>
+  <summary>>0.25% or last 2 major versions and supports es6-module</summary>
+
+  <p style="white-space: pre">
+  <strong>caniuse-lite db date: 15/02/2020</strong>
+  and_chr 87
+  and_ff 83
+  and_qq 10.4
+  android 81
+  chrome 87
+  chrome 86
+  chrome 85
+  edge 87
+  edge 86
+  firefox 84
+  firefox 83
+  ios_saf 14.0-14.3
+  ios_saf 13.4-13.7
+  ios_saf 13.3
+  ios_saf 13.2
+  ios_saf 13.0-13.1
+  ios_saf 12.2-12.4
+  opera 72
+  opera 71
+  safari 14
+  safari 13.1
+  safari 13
+  samsung 13.0
+  samsung 12.0
+  </p>
+</details>
 
 ## Alternatives
 

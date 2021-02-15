@@ -36,33 +36,42 @@ const EMPHASIZED_TEXT_REGEXP = /([*_])((?:\[.*?\][([].*?[)\]]|.)*?)\1/g;
 
 const REFERENCE_LINK_TEXT_REGEXP = /\[([^\]]*)\] ?\[([^\]]*)\]/g;
 
+function matchAll(
+  regexp: RegExp,
+  text: string,
+  onMatch: (match: RegExpExecArray) => void,
+) {
+  let match: RegExpExecArray | null;
+  while ((match = regexp.exec(text)) !== null) {
+    onMatch(match);
+  }
+}
+
 export function parseSegments(text: string): Segment[] {
   const matches: Match[] = [];
 
-  Array.from(text.matchAll(REFERENCE_LINK_TEXT_REGEXP)).forEach(
-    (referenceLinkRegExpMatch) => {
-      const innerText = referenceLinkRegExpMatch[1];
-      const reference = referenceLinkRegExpMatch[2];
-      const startIndex = referenceLinkRegExpMatch.index;
+  matchAll(REFERENCE_LINK_TEXT_REGEXP, text, (referenceLinkRegExpMatch) => {
+    const innerText = referenceLinkRegExpMatch[1];
+    const reference = referenceLinkRegExpMatch[2];
+    const startIndex = referenceLinkRegExpMatch.index;
 
-      if (!innerText || !reference || startIndex == null) {
-        return;
-      }
+    if (!innerText || !reference || startIndex == null) {
+      return;
+    }
 
-      const endIndex = startIndex + referenceLinkRegExpMatch[0].length;
+    const endIndex = startIndex + referenceLinkRegExpMatch[0].length;
 
-      matches.push({
-        type: 'reference-link',
-        innerText,
-        reference,
-        startIndex,
-        endIndex,
-        offset: 1,
-      });
-    },
-  );
+    matches.push({
+      type: 'reference-link',
+      innerText,
+      reference,
+      startIndex,
+      endIndex,
+      offset: 1,
+    });
+  });
 
-  Array.from(text.matchAll(STRONG_TEXT_REGEXP)).forEach((strongRegExpMatch) => {
+  matchAll(STRONG_TEXT_REGEXP, text, (strongRegExpMatch) => {
     const inlineMatch = getInlineMatchFromRegexpMatch(
       strongRegExpMatch,
       'strong',
@@ -73,18 +82,16 @@ export function parseSegments(text: string): Segment[] {
     }
   });
 
-  Array.from(text.matchAll(EMPHASIZED_TEXT_REGEXP)).forEach(
-    (emphasisRegExpMatch) => {
-      const inlineMatch = getInlineMatchFromRegexpMatch(
-        emphasisRegExpMatch,
-        'emphasis',
-      );
+  matchAll(EMPHASIZED_TEXT_REGEXP, text, (emphasisRegExpMatch) => {
+    const inlineMatch = getInlineMatchFromRegexpMatch(
+      emphasisRegExpMatch,
+      'emphasis',
+    );
 
-      if (inlineMatch) {
-        matches.push(inlineMatch);
-      }
-    },
-  );
+    if (inlineMatch) {
+      matches.push(inlineMatch);
+    }
+  });
 
   matches.sort((a, b) => a.startIndex - b.startIndex);
 
