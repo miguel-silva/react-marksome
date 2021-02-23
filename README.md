@@ -13,7 +13,7 @@ See [Rationale](#rationale) for more info.
 Install:
 
 ```sh
-npm i react-markdown
+npm i react-marksome
 ```
 
 Import and render the Marksome component:
@@ -36,7 +36,7 @@ function Demo() {
 
 renders the following line:
 
-The _quick_ _brown_ **fox** jumps over the _lazy_ **dog**. [Wikipedia]("https://en.wikipedia.org/wiki/The_quick_brown_fox_jumps_over_the_lazy_dog")
+The _quick_ _brown_ **fox** jumps over the _lazy_ **dog**. [Wikipedia](https://en.wikipedia.org/wiki/The_quick_brown_fox_jumps_over_the_lazy_dog)
 
 For more examples, see the [stories](./stories/Marksome.stories.tsx) together with related [fixtures](./test/fixtures.ts).
 
