@@ -1,10 +1,13 @@
-import React, { HTMLAttributes, Key, ReactNode, useMemo } from 'react';
+import React, {
+  cloneElement,
+  HTMLAttributes,
+  ReactElement,
+  ReactNode,
+  useMemo,
+} from 'react';
 import { parseSegments, Segment } from './marksomeParser';
 
-export type ReferenceRenderFunction = (
-  key: Key,
-  children: ReactNode,
-) => ReactNode;
+export type ReferenceRenderFunction = (children: ReactNode) => ReactElement;
 
 export type References = Record<string, string | ReferenceRenderFunction>;
 
@@ -73,7 +76,9 @@ function renderSegments(
           );
         }
 
-        return referenceValue(segmentIndex, children);
+        const element = referenceValue(children);
+
+        return cloneElement(element, { key: segmentIndex });
       }
       default:
         return null;

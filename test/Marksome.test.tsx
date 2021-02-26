@@ -126,10 +126,8 @@ test('renders a couple of references as custom elements', () => {
 
   const references: References = {
     ...customComponentsFixture.references,
-    'greeting-button': (key, children) => (
-      <button key={key} onClick={onClick}>
-        {children}
-      </button>
+    'greeting-button': (children) => (
+      <button onClick={onClick}>{children}</button>
     ),
   };
 
