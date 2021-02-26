@@ -61,21 +61,17 @@ export function CustomInput() {
 export function ReferenceLink() {
   return (
     <>
-      <p>
-        {referenceLinkFixture.text}
-        <dl className={descriptionListStyle}>
-          {Object.entries(referenceLinkFixture.references).map(
-            ([key, value]) => {
-              return (
-                <Fragment key={key}>
-                  <dt>{key}:</dt>
-                  <dd>{value}</dd>
-                </Fragment>
-              );
-            },
-          )}
-        </dl>
-      </p>
+      <p>{referenceLinkFixture.text}</p>
+      <dl className={descriptionListStyle}>
+        {Object.entries(referenceLinkFixture.references).map(([key, value]) => {
+          return (
+            <Fragment key={key}>
+              <dt>{key}:</dt>
+              <dd>{value}</dd>
+            </Fragment>
+          );
+        })}
+      </dl>
       <Marksome {...referenceLinkFixture} />
     </>
   );
@@ -84,15 +80,17 @@ export function ReferenceLink() {
 export function CustomComponents() {
   return (
     <>
-      <p>
-        {customComponentsFixture.text}
-        <dl className={descriptionListStyle}>
-          <dt>md-icon:</dt>
-          <dd>{`(key, children) => <DiMarkdown key={key} title={String(children)}/>`}</dd>
-          <dt>greeting-button:</dt>
-          <dd>{`(key, children) => <button key={key} onClick={()=>alert('Hello!')}>{children}</button>`}</dd>
-        </dl>
-      </p>
+      <p>{customComponentsFixture.text}</p>
+      <dl className={descriptionListStyle}>
+        <dt>md-icon:</dt>
+        <dd>
+          <code>{`(children) => <DiMarkdown title={String(children)}/>`}</code>
+        </dd>
+        <dt>greeting-button:</dt>
+        <dd>
+          <code>{`(children) => <button onClick={()=>alert('Hello!')}>{children}</button>`}</code>
+        </dd>
+      </dl>
       <Marksome {...customComponentsFixture} />
     </>
   );
@@ -104,4 +102,14 @@ const descriptionListStyle = css`
   grid-template-columns: max-content max-content;
 
   margin-top: 5px;
+  padding: 0 10px;
+
+  dt {
+    font-style: italic;
+    text-align: right;
+  }
+
+  dd {
+    margin: 0;
+  }
 `;

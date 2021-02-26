@@ -22,18 +22,16 @@ export const referenceLinkFixture: MarksomeProps = {
   references: { '1': 'https://www.npmjs.com/package/markdown-to-jsx' },
 };
 
-const RenderMarkdownIcon: ReferenceRenderFunction = (key, children) =>
+const RenderMarkdownIcon: ReferenceRenderFunction = (children) =>
   createElement(DiMarkdown, {
     title: String(children),
     style: { verticalAlign: 'middle' },
-    key,
   });
 
-const RenderGreetingButton: ReferenceRenderFunction = (key, children) =>
+const RenderGreetingButton: ReferenceRenderFunction = (children) =>
   createElement(
     'button',
     {
-      key,
       onClick: () => {
         alert('Hello!');
       },

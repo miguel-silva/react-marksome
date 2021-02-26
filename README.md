@@ -46,7 +46,7 @@ For more examples, see the [stories](./stories/Marksome.stories.tsx) together wi
 
 React component that parses and renders a subset of markdown.
 
-It expects the markdown text to be provided via a `text` prop, which then is combined with reference links (`[label][reference]`)defined under the `references` prop.
+It expects the markdown text to be provided via a `text` prop, which then is combined with reference links (`[label][reference]`) defined under the `references` prop.
 
 #### Props
 
@@ -58,7 +58,7 @@ type MarksomeProps = HTMLAttributes<HTMLSpanElement> & {
 
 type References = Record<string, string | ReferenceRenderFunction>;
 
-type ReferenceRenderFunction = (key: Key, children: ReactNode) => ReactNode;
+type ReferenceRenderFunction = (children: ReactNode) => ReactElement;
 ```
 
 #### Basic usage
@@ -74,9 +74,8 @@ function CustomComponentsDemo() {
   const text = 'The following is an actual button: [*Howdie*][greeting-button]';
 
   const references: References = {
-    'greeting-button': (key, children) => (
+    'greeting-button': (children) => (
       <button
-        key={key}
         onClick={() => {
           alert('Hello!');
         }}
