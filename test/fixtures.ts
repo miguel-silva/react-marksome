@@ -3,13 +3,13 @@ import { createElement } from 'react';
 import { MarksomeProps, ReferenceRenderFunction } from '../src';
 
 export const mixedInlineStylesFixture =
-  'This is *emphasized*, **strong**,  *emphasized with ***a break of strong*** in the middle*, **strong with ***a break of emphasized*** in the middle**, ***strong within** emphasized*, ***emphasized within* strong** and ***both***!';
+  'This is *emphasized*, **strong**,  *emphasized with* **a break of strong** *in the middle*, **strong with** *a break of emphasized* **in the middle**, ***strong within** emphasized*, ***emphasized within* strong** and ***both***!';
 
 export const diverseInlineStylesFixtureList = [
   '*emphasized*',
   '**strong**',
-  '*emphasized with ***a break of strong*** in the middle*',
-  '**strong with ***a break of emphasized*** in the middle**',
+  '*emphasized with* **a break of strong** *in the middle*',
+  '**strong with** *a break of emphasized* **in the middle**',
   '***strong within** emphasized*',
   '***emphasized within* strong**',
   '**strong with *a bit of emphasized***',
