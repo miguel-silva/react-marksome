@@ -37,17 +37,17 @@ type ReferenceLinkMatch = {
   reference: string;
 };
 
-const REFERENCE_LINK_TEXT_REGEXP = /\[([^\]]*)\] ?\[([^\]]*)\]/g;
+// Capture [text][reference] or [reference] (taking into account escaped squared brackets)
+const REFERENCE_LINK_REGEXP = /(?<!\\)(?:\\\\)*(?:\[(.+?)(?<!\\)(?:\\\\)*\])?\[((?:(?<!\\)(?:\\\\)*\\[[]|[^[])+?)(?<!\\)(?:\\\\)*\]/g;
 
-// Capture sequence of '*' or '_', not preceded by a non-escaped \
-const EMPH_SEQUENCE_REGEXP = /(?<!(?<!\\)\\)(?:(\*)+|(_)+)/g;
+// Capture sequence of '*' or '_' (non-escaped)
+const EMPH_SEQUENCE_REGEXP = /(?<!\\)(?:\\\\)*(?:(\*)+|(_)+)/g;
 
 const WHITESPACE_CHAR_REGEXP = /\s/;
-const PUNCTUATION_CHAR_REGEXP = new RegExp(
-  '[!"#$%&\'()*+,.\\/:;<=>?@[\\\\\\]^_`{|}~-]',
-);
+const PUNCTUATION_CHAR_REGEXP = /[!"#$%&'()*+,.\/:;<=>?@[\\\]^_`{|}~-]/;
 
-const ESCAPABLE_REGEXP = new RegExp('\\\\([*[\\\\\\]_])', 'g');
+// subset of escapable markdown chars which are used as markers in this lib
+const ESCAPABLE_CHAR_REGEXP = /\\([*[\\\]_])/g;
 
 function matchAll(
   regexp: RegExp,
@@ -65,14 +65,15 @@ export function parseSegments(text: string): Segment[] {
 
   const referenceLinkMatches: ReferenceLinkMatch[] = [];
 
-  matchAll(REFERENCE_LINK_TEXT_REGEXP, text, (referenceLinkRegExpMatch) => {
-    const innerText = referenceLinkRegExpMatch[1];
+  matchAll(REFERENCE_LINK_REGEXP, text, (referenceLinkRegExpMatch) => {
     const reference = referenceLinkRegExpMatch[2];
     const startIndex = referenceLinkRegExpMatch.index;
 
-    if (!innerText || !reference || startIndex == null) {
+    if (!reference || startIndex == null) {
       return;
     }
+
+    const innerText = referenceLinkRegExpMatch[1] || reference;
 
     const endIndex = startIndex + referenceLinkRegExpMatch[0].length;
 
@@ -323,14 +324,18 @@ function analyseSurroundingChar(
 
 function getSegmentsFromMatches(text: string, matches: Match[]): Segment[] {
   if (!matches.length) {
-    return [text.replace(ESCAPABLE_REGEXP, '$1')];
+    return [text.replace(ESCAPABLE_CHAR_REGEXP, '$1')];
   }
 
   const firstMatchStartIndex = matches[0].startIndex;
 
   const segments: Segment[] =
     firstMatchStartIndex > 0
-      ? [text.slice(0, firstMatchStartIndex).replace(ESCAPABLE_REGEXP, '$1')]
+      ? [
+          text
+            .slice(0, firstMatchStartIndex)
+            .replace(ESCAPABLE_CHAR_REGEXP, '$1'),
+        ]
       : [];
 
   while (matches.length) {
@@ -382,7 +387,7 @@ function getSegmentsFromMatches(text: string, matches: Match[]): Segment[] {
       : text.slice(currentMatch.endIndex);
 
     if (textAfterLastMatch) {
-      segments.push(textAfterLastMatch.replace(ESCAPABLE_REGEXP, '$1'));
+      segments.push(textAfterLastMatch.replace(ESCAPABLE_CHAR_REGEXP, '$1'));
     }
   }
 

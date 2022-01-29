@@ -1,7 +1,7 @@
 import { parseSegments } from '../src';
 
 // https://spec.commonmark.org/0.30/#emphasis-and-strong-emphasis
-describe('emphasis parsing', () => {
+describe('emphasis parsing (commonmark spec)', () => {
   const EMPH_START_EXAMPLE = 350;
 
   [
@@ -1256,5 +1256,101 @@ describe('emphasis parsing', () => {
     }`, () => {
       expect(parseSegments(text)).toEqual(expected);
     });
+  });
+});
+
+// https://spec.commonmark.org/0.30/#links
+describe('reference links parsing (influenced by commonmark spec)', () => {
+  test('basic full reference link', () => {
+    expect(parseSegments('[foo][bar]')).toEqual([
+      {
+        type: 'reference-link',
+        content: ['foo'],
+        reference: 'bar',
+      },
+    ]);
+  });
+
+  test("link text may contain escaped or unescaped brackets (which don't form a full link reference)", () => {
+    expect(parseSegments('[link [foo \\[bar\\]]][ref]')).toEqual([
+      {
+        type: 'reference-link',
+        content: ['link [foo [bar]]'],
+        reference: 'ref',
+      },
+    ]);
+  });
+
+  test('link text may contain escaped full link reference', () => {
+    expect(parseSegments('[link [bar]\\[ref]][ref]')).toEqual([
+      {
+        type: 'reference-link',
+        content: ['link [bar][ref]'],
+        reference: 'ref',
+      },
+    ]);
+  });
+
+  test('The link text may contain inline content', () => {
+    expect(parseSegments('[link *foo **bar***][ref]')).toEqual([
+      {
+        type: 'reference-link',
+        content: [
+          'link ',
+          {
+            type: 'emphasis',
+            content: ['foo ', { type: 'strong', content: ['bar'] }],
+          },
+        ],
+        reference: 'ref',
+      },
+    ]);
+  });
+
+  test('space between two pairs of brackets count as independent shortcut reference links', () => {
+    expect(parseSegments('[foo] [bar]')).toEqual([
+      {
+        type: 'reference-link',
+        content: ['foo'],
+        reference: 'foo',
+      },
+      ' ',
+      {
+        type: 'reference-link',
+        content: ['bar'],
+        reference: 'bar',
+      },
+    ]);
+  });
+
+  test('link labels cannot contain unescaped brackets', () => {
+    expect(parseSegments('[foo][ref[bar]]')).toEqual([
+      {
+        type: 'reference-link',
+        content: ['foo'],
+        reference: 'foo',
+      },
+      '[ref',
+      {
+        type: 'reference-link',
+        content: ['bar'],
+        reference: 'bar',
+      },
+      ']',
+    ]);
+  });
+
+  test('link labels may contain escaped brackets', () => {
+    expect(parseSegments('[foo][ref\\[]')).toEqual([
+      {
+        type: 'reference-link',
+        content: ['foo'],
+        reference: 'ref\\[',
+      },
+    ]);
+  });
+
+  test('respects escaped brakets', () => {
+    expect(parseSegments('\\[foo]')).toEqual(['[foo]']);
   });
 });
