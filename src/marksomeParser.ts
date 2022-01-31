@@ -49,17 +49,6 @@ const PUNCTUATION_CHAR_REGEXP = /[!"#$%&'()*+,.\/:;<=>?@[\\\]^_`{|}~-]/;
 // subset of escapable markdown chars which are used as markers in this lib
 const ESCAPABLE_CHAR_REGEXP = /\\([*[\\\]_])/g;
 
-function matchAll(
-  regexp: RegExp,
-  text: string,
-  onMatch: (match: RegExpExecArray) => void,
-) {
-  let match: RegExpExecArray | null;
-  while ((match = regexp.exec(text)) !== null) {
-    onMatch(match);
-  }
-}
-
 export function parseSegments(text: string): Segment[] {
   const matches: Match[] = [];
 
@@ -273,6 +262,17 @@ export function parseSegments(text: string): Segment[] {
   matches.sort((a, b) => a.startIndex - b.startIndex);
 
   return getSegmentsFromMatches(text, matches);
+}
+
+function matchAll(
+  regexp: RegExp,
+  text: string,
+  onMatch: (match: RegExpExecArray) => void,
+) {
+  let match: RegExpExecArray | null;
+  while ((match = regexp.exec(text)) !== null) {
+    onMatch(match);
+  }
 }
 
 function createInlineStyleMatchFromDelimiters(
