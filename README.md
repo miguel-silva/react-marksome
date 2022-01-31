@@ -89,15 +89,36 @@ function CustomComponentsDemo() {
 }
 ```
 
-## Rationale
+## Supported Markdown
 
 The current subset of markdown that is supported is:
 
-- \*\*strong text\*\*
-- \*emphasized text\*
-- \[link description\]\[reference\]
+### Emphasis and strong emphasis
 
-By restricting ourselves to only support some markdown we're able to:
+_Emphasis_ (\*Emphasis\*) and **strong emphasis** (\*\*strong emphasis\*\*) parcing respects the [related commonmark spec section](https://spec.commonmark.org/0.30/#emphasis-and-strong-emphasis).
+
+### Link references
+
+Influenced by the [related commonmark spec section](https://spec.commonmark.org/0.30/#emphasis-and-strong-emphasis), link references can be defined in a couple of ways:
+
+- Full reference links:
+  - input: \[react-marksome's Github page\]\[react-marksome github\]
+  - output: [react-marksome's Github page][react-marksome github]
+- Shortcut reference links:
+  - input: \[react-marksome github\]
+  - output: [react-marksome github]
+
+There are certain quirks in marksome that are non-spec:
+
+1. it matches reference links regardless if the corresponding reference labels are defined as keys in the `references` prop or not
+2. reference labels are kept as is when looking for the corresponding key in `references` prop (ex: case-sensitive, no space-trimming, etc)
+3. nested squared brackets don't follow the same rules (ex: marksome supports unbalanced brackets)
+
+If reference links are not being matched as you desire, disable unintended matches by escaping the related opening (\\\[) or closing (\\\]) brackets.
+
+## Rationale
+
+By restricting ourselves to support only [some markdown](#supported-markdown) we're able to:
 
 - build a light package ([bundlephobia](https://bundlephobia.com/result?p=react-marksome))
 - that provides a flexible, readable and condensed format for singleline pieces of text
@@ -175,3 +196,5 @@ Calculates the real cost of your library using [size-limit](https://github.com/a
 ## Credits
 
 - [devuo](https://github.com/devuo) for providing some ideas and inspiration!
+
+[react-marksome github]: https://github.com/miguel-silva/react-marksome

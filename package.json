@@ -42,11 +42,11 @@
   "size-limit": [
     {
       "path": "dist/react-marksome.cjs.production.min.js",
-      "limit": "1 KB"
+      "limit": "1.5 KB"
     },
     {
       "path": "dist/react-marksome.esm.js",
-      "limit": "1 KB"
+      "limit": "1.5 KB"
     }
   ],
   "devDependencies": {
