@@ -89,15 +89,36 @@ function CustomComponentsDemo() {
 }
 ```
 
-## Rationale
+## Supported Markdown
 
 The current subset of markdown that is supported is:
 
-- \*\*strong text\*\*
-- \*emphasized text\*
-- \[link description\]\[reference\]
+### Emphasis and strong emphasis
 
-By restricting ourselves to only support some markdown we're able to:
+_Emphasis_ (\*Emphasis\*) and **strong emphasis** (\*\*strong emphasis\*\*) parcing respects the [related commonmark spec section](https://spec.commonmark.org/0.30/#emphasis-and-strong-emphasis).
+
+### Link references
+
+Influenced by the [related commonmark spec section](https://spec.commonmark.org/0.30/#emphasis-and-strong-emphasis), link references can be defined in a couple of ways:
+
+- Full reference links:
+  - input: \[react-marksome's Github page\]\[react-marksome github\]
+  - output: [react-marksome's Github page][react-marksome github]
+- Shortcut reference links:
+  - input: \[react-marksome github\]
+  - output: [react-marksome github]
+
+There are certain quirks in marksome that are non-spec:
+
+1. it matches reference links regardless if the corresponding reference labels are defined as keys in the `references` prop or not
+2. reference labels are kept as is when looking for the corresponding key in `references` prop (ex: case-sensitive, no space-trimming, etc)
+3. nested squared brackets don't follow the same rules (ex: marksome supports unbalanced brackets)
+
+If reference links are not being matched as you desire, disable unintended matches by escaping the related opening (\\\[) or closing (\\\]) brackets.
+
+## Rationale
+
+By restricting ourselves to support only [some markdown](#supported-markdown) we're able to:
 
 - build a light package ([bundlephobia](https://bundlephobia.com/result?p=react-marksome))
 - that provides a flexible, readable and condensed format for singleline pieces of text
@@ -116,41 +137,42 @@ The following [browserslist](https://github.com/browserslist/browserslist) is su
 <details>
   <summary>>0.25% or last 2 major versions and supports es6-module</summary>
 
-  <p><strong>caniuse-lite db date: 15/02/2020</strong></p>
+  <p><strong>caniuse-lite db date: 2nd Jan 2022</strong></p>
   <ul>
-    <li>and_chr 87</li>
-    <li>and_ff 83</li>
+    <li>and_chr 97</li>
+    <li>and_ff 95</li>
     <li>and_qq 10.4</li>
-    <li>android 81</li>
-    <li>chrome 87</li>
-    <li>chrome 86</li>
-    <li>chrome 85</li>
-    <li>edge 87</li>
-    <li>edge 86</li>
-    <li>firefox 84</li>
-    <li>firefox 83</li>
-    <li>ios_saf 14.0-14.3</li>
+    <li>android 97</li>
+    <li>chrome 97</li>
+    <li>chrome 96</li>
+    <li>chrome 95</li>
+    <li>chrome 94</li>
+    <li>chrome 93</li>
+    <li>chrome 92</li>
+    <li>edge 97</li>
+    <li>edge 96</li>
+    <li>firefox 96</li>
+    <li>firefox 95</li>
+    <li>firefox 94</li>
+    <li>ios_saf 15.2-15.3</li>
+    <li>ios_saf 15.0-15.1</li>
+    <li>ios_saf 14.5-14.8</li>
+    <li>ios_saf 14.0-14.4</li>
     <li>ios_saf 13.4-13.7</li>
-    <li>ios_saf 13.3</li>
-    <li>ios_saf 13.2</li>
-    <li>ios_saf 13.0-13.1</li>
-    <li>ios_saf 12.2-12.4</li>
-    <li>opera 72</li>
-    <li>opera 71</li>
+    <li>ios_saf 12.2-12.5</li>
+    <li>op_mob 64</li>
+    <li>opera 82</li>
+    <li>opera 81</li>
+    <li>safari 15.2-15.3</li>
+    <li>safari 15.1</li>
+    <li>safari 15</li>
+    <li>safari 14.1</li>
     <li>safari 14</li>
     <li>safari 13.1</li>
-    <li>safari 13</li>
-    <li>samsung 13.0</li>
-    <li>samsung 12.0</li>
+    <li>samsung 16.0</li>
+    <li>samsung 15.0</li>
   </ul>
 </details>
-
-## Alternatives
-
-If you're looking for wider markdown support:
-
-- [snarkdown](https://www.npmjs.com/package/snarkdown) for lightweight Markdown parser that returns plain HTML string
-- [markdown-to-jsx](https://www.npmjs.com/package/markdown-to-jsx) for a lot configurability and extensibility
 
 ## Commands
 
@@ -175,3 +197,5 @@ Calculates the real cost of your library using [size-limit](https://github.com/a
 ## Credits
 
 - [devuo](https://github.com/devuo) for providing some ideas and inspiration!
+
+[react-marksome github]: https://github.com/miguel-silva/react-marksome

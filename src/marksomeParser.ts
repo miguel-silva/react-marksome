@@ -21,6 +21,13 @@ type InlineStyleMatch = {
   offset: number;
 };
 
+type InlineStyleDelimiter = {
+  char: '*' | '_';
+  index: number;
+  length: number;
+  type: '<' | '>' | '<>';
+};
+
 type ReferenceLinkMatch = {
   type: 'reference-link';
   startIndex: number;
@@ -30,11 +37,195 @@ type ReferenceLinkMatch = {
   reference: string;
 };
 
-const STRONG_TEXT_REGEXP = /([*_])\1\1?((?:\[.*?\][([].*?[)\]]|.)*?)\1?\1\1/g;
+// Capture [text][reference] or [reference] (taking into account escaped squared brackets)
+const REFERENCE_LINK_REGEXP = /(?<!\\)(?:\\\\)*(?:\[(.+?)(?<!\\)(?:\\\\)*\])?\[((?:(?<!\\)(?:\\\\)*\\[[]|[^[])+?)(?<!\\)(?:\\\\)*\]/g;
 
-const EMPHASIZED_TEXT_REGEXP = /([*_])((?:\[.*?\][([].*?[)\]]|.)*?)\1/g;
+// Capture sequence of '*' or '_' (non-escaped)
+const EMPH_SEQUENCE_REGEXP = /(?<!\\)(?:\\\\)*(\*+|_+)/g;
 
-const REFERENCE_LINK_TEXT_REGEXP = /\[([^\]]*)\] ?\[([^\]]*)\]/g;
+export function parseSegments(text: string): Segment[] {
+  const matches: Match[] = [];
+
+  const pendingOpenersByBlockIndex = new Map<number, InlineStyleDelimiter[]>([
+    [-1, []],
+  ]);
+
+  const referenceLinkMatches: ReferenceLinkMatch[] = [];
+
+  matchAll(REFERENCE_LINK_REGEXP, text, (referenceLinkRegExpMatch) => {
+    const reference = referenceLinkRegExpMatch[2];
+    const startIndex = referenceLinkRegExpMatch.index;
+
+    const innerText = referenceLinkRegExpMatch[1] || reference;
+
+    const endIndex = startIndex + referenceLinkRegExpMatch[0].length;
+
+    const match: ReferenceLinkMatch = {
+      type: 'reference-link',
+      innerText,
+      reference,
+      startIndex,
+      endIndex,
+      offset: 1,
+    };
+
+    pendingOpenersByBlockIndex.set(referenceLinkMatches.length, []);
+
+    referenceLinkMatches.push(match);
+    matches.push(match);
+  });
+
+  let currentReferenceLinkIndex = 0;
+
+  matchAll(EMPH_SEQUENCE_REGEXP, text, (emphCharRegExpMatch) => {
+    const char = emphCharRegExpMatch[1][0] as '*' | '_';
+
+    const length = emphCharRegExpMatch[0].length;
+
+    const index = emphCharRegExpMatch.index;
+
+    const previousCharInfo = getCharInfo(text[index - 1]);
+    const nextCharInfo = getCharInfo(text[index + length]);
+
+    const leftFlanking =
+      !nextCharInfo || (nextCharInfo === '.' && !!previousCharInfo);
+    const rightFlanking =
+      !previousCharInfo || (previousCharInfo === '.' && !!nextCharInfo);
+
+    let canOpen = leftFlanking;
+    let canClose = rightFlanking;
+
+    if (char === '_') {
+      canOpen = leftFlanking && (!rightFlanking || previousCharInfo === '.');
+      canClose = rightFlanking && (!leftFlanking || nextCharInfo === '.');
+    }
+
+    if (!canOpen && !canClose) {
+      return;
+    }
+
+    // identify current delimiter block index
+    let blockIndex = -1;
+
+    for (
+      ;
+      currentReferenceLinkIndex < referenceLinkMatches.length;
+      currentReferenceLinkIndex++
+    ) {
+      const currentReferenceLinkMatch =
+        referenceLinkMatches[currentReferenceLinkIndex];
+
+      // comes before the current block -> it's outside a block
+      if (currentReferenceLinkMatch.startIndex > index) {
+        break;
+      }
+
+      // comes after the current block -> check next block
+      if (currentReferenceLinkMatch.endIndex <= index) {
+        continue;
+      }
+
+      // it's inside the block but outside it's innerText -> ignore this emph char match
+      if (
+        currentReferenceLinkMatch.startIndex +
+          currentReferenceLinkMatch.offset +
+          currentReferenceLinkMatch.innerText.length <
+        index
+      ) {
+        currentReferenceLinkIndex++;
+        return;
+      }
+
+      blockIndex = currentReferenceLinkIndex;
+      break;
+    }
+
+    const delimiter: InlineStyleDelimiter = {
+      char,
+      index,
+      length,
+      type: canOpen && canClose ? '<>' : canClose ? '>' : '<',
+    };
+
+    const pendingOpeners = pendingOpenersByBlockIndex.get(blockIndex)!;
+
+    // can close -> look for last compatible opener
+    if (delimiter.type !== '<') {
+      for (
+        let pendingOpenerIndex = pendingOpeners.length - 1;
+        pendingOpenerIndex >= 0;
+        pendingOpenerIndex--
+      ) {
+        const pendingOpener = pendingOpeners[pendingOpenerIndex];
+
+        // ensure that the pendingOpener is the same character
+        if (pendingOpener.char !== delimiter.char) {
+          continue;
+        }
+
+        // from spec (https://spec.commonmark.org/0.30/#emphasis-and-strong-emphasis rule 9)
+        // If one of the delimiters can both open and close emphasis,
+        // then the sum of the lengths of the delimiter runs containing the opening and closing delimiters
+        // must not be a multiple of 3 unless both lengths are multiples of 3
+        if (pendingOpener.type === '<>' || delimiter.type === '<>') {
+          if ((pendingOpener.length + delimiter.length) % 3 === 0) {
+            if (pendingOpener.length % 3 || delimiter.length % 3) {
+              continue;
+            }
+          }
+        }
+
+        // it's a match!
+        delimiter.type = '>';
+
+        let matchDelimiterLength = Math.min(
+          delimiter.length,
+          pendingOpener.length,
+        );
+
+        // for each pair -> extract strong based on matchDelimiterInnerOffset
+        while (matchDelimiterLength > 1) {
+          matches.push(
+            createInlineStyleMatch(text, 'strong', pendingOpener, delimiter),
+          );
+
+          matchDelimiterLength -= 2;
+        }
+
+        // if one left -> extract emphasis based on matchDelimiterInnerOffset
+        if (matchDelimiterLength) {
+          matches.push(
+            createInlineStyleMatch(text, 'emphasis', pendingOpener, delimiter),
+          );
+        }
+
+        // if opener is wider than closer
+        if (pendingOpener.length) {
+          // remove openers until current one (exclusive)
+          pendingOpeners.splice(pendingOpenerIndex + 1);
+        } else {
+          // remove openers until current one (inclusive)
+          pendingOpeners.splice(pendingOpenerIndex);
+
+          // if closer is wider than opener -> look for more openers
+          if (delimiter.length) {
+            continue;
+          }
+        }
+
+        break;
+      }
+    }
+
+    if (delimiter.type !== '>') {
+      pendingOpeners.push(delimiter);
+    }
+  });
+
+  matches.sort((a, b) => a.startIndex - b.startIndex);
+
+  return getSegmentsFromMatches(text, matches);
+}
 
 function matchAll(
   regexp: RegExp,
@@ -47,93 +238,56 @@ function matchAll(
   }
 }
 
-export function parseSegments(text: string): Segment[] {
-  const matches: Match[] = [];
+function createInlineStyleMatch(
+  text: string,
+  type: 'strong' | 'emphasis',
+  opener: InlineStyleDelimiter,
+  closer: InlineStyleDelimiter,
+): InlineStyleMatch {
+  const innerTextStartIndex = opener.index + opener.length;
+  const innerTextEndIndex = closer.index;
 
-  matchAll(REFERENCE_LINK_TEXT_REGEXP, text, (referenceLinkRegExpMatch) => {
-    const innerText = referenceLinkRegExpMatch[1];
-    const reference = referenceLinkRegExpMatch[2];
-    const startIndex = referenceLinkRegExpMatch.index;
+  const offset = type === 'strong' ? 2 : 1;
 
-    if (!innerText || !reference || startIndex == null) {
-      return;
-    }
-
-    const endIndex = startIndex + referenceLinkRegExpMatch[0].length;
-
-    matches.push({
-      type: 'reference-link',
-      innerText,
-      reference,
-      startIndex,
-      endIndex,
-      offset: 1,
-    });
-  });
-
-  matchAll(STRONG_TEXT_REGEXP, text, (strongRegExpMatch) => {
-    const inlineMatch = getInlineMatchFromRegexpMatch(
-      strongRegExpMatch,
-      'strong',
-    );
-
-    if (inlineMatch) {
-      matches.push(inlineMatch);
-    }
-  });
-
-  matchAll(EMPHASIZED_TEXT_REGEXP, text, (emphasisRegExpMatch) => {
-    const inlineMatch = getInlineMatchFromRegexpMatch(
-      emphasisRegExpMatch,
-      'emphasis',
-    );
-
-    if (inlineMatch) {
-      matches.push(inlineMatch);
-    }
-  });
-
-  matches.sort((a, b) => a.startIndex - b.startIndex);
-
-  return getSegmentsFromMatches(text, matches);
-}
-
-function getInlineMatchFromRegexpMatch(
-  regexpMatch: RegExpMatchArray,
-  inlineType: 'strong' | 'emphasis',
-): InlineStyleMatch | undefined {
-  const startIndex = regexpMatch.index;
-
-  const innerText = regexpMatch[2];
-
-  if (startIndex == null || !innerText) {
-    return;
-  }
-
-  const decoratedText = regexpMatch[0];
-
-  const offset = decoratedText.indexOf(innerText);
-
-  const endIndex = startIndex + decoratedText.length;
+  // adjust delimiters
+  opener.length -= offset;
+  closer.length -= offset;
+  closer.index += offset;
 
   return {
-    type: inlineType,
-    startIndex,
-    endIndex,
-    innerText,
+    type,
+    startIndex: innerTextStartIndex - offset,
+    endIndex: innerTextEndIndex + offset,
+    innerText: text.slice(innerTextStartIndex, innerTextEndIndex),
     offset,
   };
 }
 
+function getCharInfo(char: string | undefined): ' ' | '.' | undefined {
+  // detect spaces
+  if (!char || /\s/.exec(char)) {
+    return ' ';
+  }
+
+  // detect punctuation
+  if (/[!"#$%&'()*+,.\/:;<=>?@[\\\]^_`{|}~-]/.exec(char)) {
+    return '.';
+  }
+
+  return;
+}
+
 function getSegmentsFromMatches(text: string, matches: Match[]): Segment[] {
   if (!matches.length) {
-    return [text];
+    return [unescapeText(text)];
   }
 
   const firstMatchStartIndex = matches[0].startIndex;
 
   const segments: Segment[] =
-    firstMatchStartIndex > 0 ? [text.slice(0, firstMatchStartIndex)] : [];
+    firstMatchStartIndex > 0
+      ? [unescapeText(text.slice(0, firstMatchStartIndex))]
+      : [];
 
   while (matches.length) {
     const currentMatch = matches.shift()!;
@@ -142,18 +296,9 @@ function getSegmentsFromMatches(text: string, matches: Match[]): Segment[] {
 
     const innerMatches: Match[] = [];
 
-    for (let i = 0; i < matches.length; ) {
-      const otherMatch = matches[i];
-
-      // if not an inner match, continue to the next
-      if (otherMatch.endIndex > currentMatch.endIndex) {
-        i++;
-
-        continue;
-      }
-
-      // remove it from matches
-      matches.splice(i, 1);
+    // find innerMatches
+    while (matches.length && matches[0].endIndex < currentMatch.endIndex) {
+      const otherMatch = matches.shift()!;
 
       otherMatch.startIndex -= currentMatchTextStart;
       otherMatch.endIndex -= currentMatchTextStart;
@@ -184,9 +329,14 @@ function getSegmentsFromMatches(text: string, matches: Match[]): Segment[] {
       : text.slice(currentMatch.endIndex);
 
     if (textAfterLastMatch) {
-      segments.push(textAfterLastMatch);
+      segments.push(unescapeText(textAfterLastMatch));
     }
   }
 
   return segments;
+}
+
+function unescapeText(text: string) {
+  // subset of escapable markdown chars which are used as markers in this lib
+  return text.replace(/\\([*[\\\]_])/g, '$1');
 }

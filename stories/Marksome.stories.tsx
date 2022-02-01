@@ -66,7 +66,7 @@ export function ReferenceLink() {
         {Object.entries(referenceLinkFixture.references).map(([key, value]) => {
           return (
             <Fragment key={key}>
-              <dt>{key}:</dt>
+              <dt>'{key}':</dt>
               <dd>{value}</dd>
             </Fragment>
           );
@@ -82,11 +82,11 @@ export function CustomComponents() {
     <>
       <p>{customComponentsFixture.text}</p>
       <dl className={descriptionListStyle}>
-        <dt>md-icon:</dt>
+        <dt>'md-icon':</dt>
         <dd>
           <code>{`(children) => <DiMarkdown title={String(children)}/>`}</code>
         </dd>
-        <dt>greeting-button:</dt>
+        <dt>'greeting-button':</dt>
         <dd>
           <code>{`(children) => <button onClick={()=>alert('Hello!')}>{children}</button>`}</code>
         </dd>
