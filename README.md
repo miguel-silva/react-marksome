@@ -137,41 +137,42 @@ The following [browserslist](https://github.com/browserslist/browserslist) is su
 <details>
   <summary>>0.25% or last 2 major versions and supports es6-module</summary>
 
-  <p><strong>caniuse-lite db date: 15/02/2020</strong></p>
+  <p><strong>caniuse-lite db date: 2nd Jan 2022</strong></p>
   <ul>
-    <li>and_chr 87</li>
-    <li>and_ff 83</li>
+    <li>and_chr 97</li>
+    <li>and_ff 95</li>
     <li>and_qq 10.4</li>
-    <li>android 81</li>
-    <li>chrome 87</li>
-    <li>chrome 86</li>
-    <li>chrome 85</li>
-    <li>edge 87</li>
-    <li>edge 86</li>
-    <li>firefox 84</li>
-    <li>firefox 83</li>
-    <li>ios_saf 14.0-14.3</li>
+    <li>android 97</li>
+    <li>chrome 97</li>
+    <li>chrome 96</li>
+    <li>chrome 95</li>
+    <li>chrome 94</li>
+    <li>chrome 93</li>
+    <li>chrome 92</li>
+    <li>edge 97</li>
+    <li>edge 96</li>
+    <li>firefox 96</li>
+    <li>firefox 95</li>
+    <li>firefox 94</li>
+    <li>ios_saf 15.2-15.3</li>
+    <li>ios_saf 15.0-15.1</li>
+    <li>ios_saf 14.5-14.8</li>
+    <li>ios_saf 14.0-14.4</li>
     <li>ios_saf 13.4-13.7</li>
-    <li>ios_saf 13.3</li>
-    <li>ios_saf 13.2</li>
-    <li>ios_saf 13.0-13.1</li>
-    <li>ios_saf 12.2-12.4</li>
-    <li>opera 72</li>
-    <li>opera 71</li>
+    <li>ios_saf 12.2-12.5</li>
+    <li>op_mob 64</li>
+    <li>opera 82</li>
+    <li>opera 81</li>
+    <li>safari 15.2-15.3</li>
+    <li>safari 15.1</li>
+    <li>safari 15</li>
+    <li>safari 14.1</li>
     <li>safari 14</li>
     <li>safari 13.1</li>
-    <li>safari 13</li>
-    <li>samsung 13.0</li>
-    <li>samsung 12.0</li>
+    <li>samsung 16.0</li>
+    <li>samsung 15.0</li>
   </ul>
 </details>
-
-## Alternatives
-
-If you're looking for wider markdown support:
-
-- [snarkdown](https://www.npmjs.com/package/snarkdown) for lightweight Markdown parser that returns plain HTML string
-- [markdown-to-jsx](https://www.npmjs.com/package/markdown-to-jsx) for a lot configurability and extensibility
 
 ## Commands
 
