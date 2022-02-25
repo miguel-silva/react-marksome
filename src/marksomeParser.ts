@@ -37,11 +37,11 @@ type ReferenceLinkMatch = {
   reference: string;
 };
 
-// Capture [text][reference] or [reference] (taking into account escaped squared brackets)
-const REFERENCE_LINK_REGEXP = /(?<!\\)(?:\\\\)*(?:\[(.+?)(?<!\\)(?:\\\\)*\])?\[((?:(?<!\\)(?:\\\\)*\\[[]|[^[])+?)(?<!\\)(?:\\\\)*\]/g;
+// Capture [text][reference] or [reference]
+const REFERENCE_LINK_REGEXP = /(?:\[(.+?)\])?\[([^[\]]+)?\]/g;
 
-// Capture sequence of '*' or '_' (non-escaped)
-const EMPH_SEQUENCE_REGEXP = /(?<!\\)(?:\\\\)*(\*+|_+)/g;
+// Capture sequence of '*' or '_'
+const EMPH_SEQUENCE_REGEXP = /(\*+|_+)/g;
 
 export function parseSegments(text: string): Segment[] {
   const matches: Match[] = [];
@@ -54,11 +54,37 @@ export function parseSegments(text: string): Segment[] {
 
   matchAll(REFERENCE_LINK_REGEXP, text, (referenceLinkRegExpMatch) => {
     const reference = referenceLinkRegExpMatch[2];
-    const startIndex = referenceLinkRegExpMatch.index;
-
-    const innerText = referenceLinkRegExpMatch[1] || reference;
-
+    let startIndex = referenceLinkRegExpMatch.index;
     const endIndex = startIndex + referenceLinkRegExpMatch[0].length;
+
+    let innerText = referenceLinkRegExpMatch[1];
+    let referenceBlockStartIndex: number;
+
+    if (innerText) {
+      // it was matched as a shortcut reference link `[innerText][reference]`
+      referenceBlockStartIndex = innerText.length + 2;
+
+      // if the innerText is escaped -> discard the innerText block
+      if (
+        isCharEscaped(text, startIndex) ||
+        isCharEscaped(text, innerText.length + 1)
+      ) {
+        startIndex = referenceBlockStartIndex;
+        innerText = reference;
+      }
+    } else {
+      // it was matched as a shortcut reference link `[reference]`
+      innerText = reference;
+      referenceBlockStartIndex = startIndex;
+    }
+
+    // if the reference block is escaped -> discard this whole match
+    if (
+      isCharEscaped(text, referenceBlockStartIndex) ||
+      isCharEscaped(text, endIndex - 1)
+    ) {
+      return;
+    }
 
     const match: ReferenceLinkMatch = {
       type: 'reference-link',
@@ -78,11 +104,21 @@ export function parseSegments(text: string): Segment[] {
   let currentReferenceLinkIndex = 0;
 
   matchAll(EMPH_SEQUENCE_REGEXP, text, (emphCharRegExpMatch) => {
+    let index = emphCharRegExpMatch.index;
+    let length = emphCharRegExpMatch[0].length;
+
+    // if the first char of the sequence is escaped
+    if (isCharEscaped(text, index)) {
+      if (length === 1) {
+        return;
+      }
+
+      // ignore the escaped char
+      index++;
+      length--;
+    }
+
     const char = emphCharRegExpMatch[1][0] as '*' | '_';
-
-    const length = emphCharRegExpMatch[0].length;
-
-    const index = emphCharRegExpMatch.index;
 
     const previousCharInfo = getCharInfo(text[index - 1]);
     const nextCharInfo = getCharInfo(text[index + length]);
@@ -334,6 +370,18 @@ function getSegmentsFromMatches(text: string, matches: Match[]): Segment[] {
   }
 
   return segments;
+}
+
+function isCharEscaped(text: string, charIndex: number): boolean {
+  let isEscaped = false;
+
+  let currentCharIndex = charIndex;
+
+  while (text[--currentCharIndex] === '\\') {
+    isEscaped = !isEscaped;
+  }
+
+  return isEscaped;
 }
 
 function unescapeText(text: string) {

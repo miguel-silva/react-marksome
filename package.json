@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "repository": "github:miguel-silva/react-marksome",
   "description": "Lightweight, flexible and readable labels in React using a subset of markdown",

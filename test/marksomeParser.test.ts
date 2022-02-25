@@ -1323,7 +1323,7 @@ describe('reference links parsing (influenced by commonmark spec)', () => {
     ]);
   });
 
-  test('link labels cannot contain unescaped brackets', () => {
+  test('link labels cannot contain brackets', () => {
     expect(parseSegments('[foo][ref[bar]]')).toEqual([
       {
         type: 'reference-link',
@@ -1337,16 +1337,6 @@ describe('reference links parsing (influenced by commonmark spec)', () => {
         reference: 'bar',
       },
       ']',
-    ]);
-  });
-
-  test('link labels may contain escaped brackets', () => {
-    expect(parseSegments('[foo][ref\\[]')).toEqual([
-      {
-        type: 'reference-link',
-        content: ['foo'],
-        reference: 'ref\\[',
-      },
     ]);
   });
 
