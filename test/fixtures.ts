@@ -1,6 +1,6 @@
 import { DiMarkdown } from 'react-icons/di';
 import { createElement } from 'react';
-import { MarksomeProps, ReferenceRenderFunction } from '../src';
+import { ReferenceRenderFunction } from '../src';
 
 export const mixedInlineStylesFixture =
   'This is *emphasized*, **strong**,  *emphasized with* **a break of strong** *in the middle*, **strong with** *a break of emphasized* **in the middle**, ***strong within** emphasized*, ***emphasized within* strong** and ***both***!';
@@ -17,7 +17,7 @@ export const diverseInlineStylesFixtureList = [
   '***both***',
 ];
 
-export const referenceLinkFixture: MarksomeProps = {
+export const referenceLinkFixture = {
   text: 'For wider markdown support, [check **markdown-to-jsx** out][1]!',
   references: { '1': 'https://www.npmjs.com/package/markdown-to-jsx' },
 };
@@ -39,9 +39,8 @@ const RenderGreetingButton: ReferenceRenderFunction = (children) =>
     children,
   );
 
-export const customComponentsFixture: MarksomeProps = {
-  text:
-    'Use references to render custom components like an **icon** ([markdown icon][md-icon]) or even a **button**: [*Howdie*][greeting-button]',
+export const customComponentsFixture = {
+  text: 'Use references to render custom components like an **icon** ([markdown icon][md-icon]) or even a **button**: [*Howdie*][greeting-button]',
   references: {
     'md-icon': RenderMarkdownIcon,
     'greeting-button': RenderGreetingButton,

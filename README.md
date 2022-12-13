@@ -26,8 +26,7 @@ function Demo() {
     'The *quick* *brown* **fox** jumps over the *lazy* **dog**. [Wikipedia][1]';
 
   const references: References = {
-    '1':
-      'https://en.wikipedia.org/wiki/The_quick_brown_fox_jumps_over_the_lazy_dog',
+    '1': 'https://en.wikipedia.org/wiki/The_quick_brown_fox_jumps_over_the_lazy_dog',
   };
 
   return <Marksome text={text} references={references} />;

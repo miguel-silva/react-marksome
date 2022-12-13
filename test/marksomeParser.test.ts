@@ -249,8 +249,7 @@ describe('emphasis parsing (commonmark spec)', () => {
       ],
     },
     {
-      text:
-        '**Gomphocarpus (*Gomphocarpus physocarpus*, syn.\n*Asclepias physocarpa*)**',
+      text: '**Gomphocarpus (*Gomphocarpus physocarpus*, syn.\n*Asclepias physocarpa*)**',
       expected: [
         {
           type: 'strong',
