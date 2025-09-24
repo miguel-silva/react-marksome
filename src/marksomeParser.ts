@@ -38,7 +38,7 @@ type ReferenceLinkMatch = {
 };
 
 // Capture [text][reference] or [reference]
-const REFERENCE_LINK_REGEXP = /(?:\[(.+?)\])?\[([^[\]]+)?\]/g;
+const REFERENCE_LINK_REGEXP = /(?:\[(.*?)\])?\[([^[\]]+)?\]/g;
 
 // Capture sequence of '*' or '_'
 const EMPH_SEQUENCE_REGEXP = /(\*+|_+)/g;
@@ -60,8 +60,15 @@ export function parseSegments(text: string): Segment[] {
     let innerText = referenceLinkRegExpMatch[1];
     let referenceBlockStartIndex: number;
 
+    // ignore:
+    // - empty references: `[]` or `[text][]`
+    // - regular references with no text: `[][reference]`
+    if (!reference || innerText === '') {
+      return;
+    }
+
     if (innerText) {
-      // it was matched as a shortcut reference link `[innerText][reference]`
+      // it was matched as a regular reference link `[innerText][reference]`
       referenceBlockStartIndex = innerText.length + 2;
 
       // if the innerText is escaped -> discard the innerText block

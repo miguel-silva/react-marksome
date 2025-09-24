@@ -1339,7 +1339,13 @@ describe('reference links parsing (influenced by commonmark spec)', () => {
     ]);
   });
 
-  test('respects escaped brakets', () => {
+  test('respects escaped brackets', () => {
     expect(parseSegments('\\[foo]')).toEqual(['[foo]']);
+  });
+
+  test('ignores empty references or references with no text', () => {
+    expect(parseSegments('foo []')).toEqual(['foo []']);
+    expect(parseSegments('foo [bar][]')).toEqual(['foo [bar][]']);
+    expect(parseSegments('foo [][bar]')).toEqual(['foo [][bar]']);
   });
 });
