@@ -1,5 +1,5 @@
-import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
+import { vi, test, expect } from 'vitest';
 import { Marksome, References } from '../src';
 import {
   diverseInlineStylesFixtureList,
@@ -9,7 +9,7 @@ import {
 } from './fixtures';
 
 test.each(diverseInlineStylesFixtureList)(
-  `renders '%p' as expected`,
+  `renders '%s' as expected`,
   (text) => {
     const { asFragment } = render(<Marksome text={text} />);
 
@@ -124,7 +124,7 @@ test('renders reference link fallback, when the respective reference is missing,
 });
 
 test('renders a couple of references as custom elements', () => {
-  const onClick = jest.fn();
+  const onClick = vi.fn();
 
   const references: References = {
     ...customComponentsFixture.references,

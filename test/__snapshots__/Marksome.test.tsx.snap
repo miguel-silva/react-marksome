@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`renders '"***both***"' as expected 1`] = `
+exports[`renders '***both***' as expected 1`] = `
 <DocumentFragment>
   <span>
     <em>
@@ -12,7 +12,7 @@ exports[`renders '"***both***"' as expected 1`] = `
 </DocumentFragment>
 `;
 
-exports[`renders '"***emphasized within* strong**"' as expected 1`] = `
+exports[`renders '***emphasized within* strong**' as expected 1`] = `
 <DocumentFragment>
   <span>
     <strong>
@@ -25,7 +25,7 @@ exports[`renders '"***emphasized within* strong**"' as expected 1`] = `
 </DocumentFragment>
 `;
 
-exports[`renders '"***strong within** emphasized*"' as expected 1`] = `
+exports[`renders '***strong within** emphasized*' as expected 1`] = `
 <DocumentFragment>
   <span>
     <em>
@@ -38,7 +38,7 @@ exports[`renders '"***strong within** emphasized*"' as expected 1`] = `
 </DocumentFragment>
 `;
 
-exports[`renders '"**strong with *a bit of emphasized***"' as expected 1`] = `
+exports[`renders '**strong with *a bit of emphasized***' as expected 1`] = `
 <DocumentFragment>
   <span>
     <strong>
@@ -51,7 +51,7 @@ exports[`renders '"**strong with *a bit of emphasized***"' as expected 1`] = `
 </DocumentFragment>
 `;
 
-exports[`renders '"**strong with** *a break of emphasized* **in the middle**"' as expected 1`] = `
+exports[`renders '**strong with** *a break of emphasized* **in the middle**' as expected 1`] = `
 <DocumentFragment>
   <span>
     <strong>
@@ -69,7 +69,7 @@ exports[`renders '"**strong with** *a break of emphasized* **in the middle**"' a
 </DocumentFragment>
 `;
 
-exports[`renders '"**strong**"' as expected 1`] = `
+exports[`renders '**strong**' as expected 1`] = `
 <DocumentFragment>
   <span>
     <strong>
@@ -79,7 +79,7 @@ exports[`renders '"**strong**"' as expected 1`] = `
 </DocumentFragment>
 `;
 
-exports[`renders '"*emphasized with **a bit of strong***"' as expected 1`] = `
+exports[`renders '*emphasized with **a bit of strong***' as expected 1`] = `
 <DocumentFragment>
   <span>
     <em>
@@ -92,7 +92,7 @@ exports[`renders '"*emphasized with **a bit of strong***"' as expected 1`] = `
 </DocumentFragment>
 `;
 
-exports[`renders '"*emphasized with* **a break of strong** *in the middle*"' as expected 1`] = `
+exports[`renders '*emphasized with* **a break of strong** *in the middle*' as expected 1`] = `
 <DocumentFragment>
   <span>
     <em>
@@ -110,7 +110,7 @@ exports[`renders '"*emphasized with* **a break of strong** *in the middle*"' as 
 </DocumentFragment>
 `;
 
-exports[`renders '"*emphasized*"' as expected 1`] = `
+exports[`renders '*emphasized*' as expected 1`] = `
 <DocumentFragment>
   <span>
     <em>
