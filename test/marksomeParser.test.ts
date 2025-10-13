@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { parseSegments } from '../src';
 
 // https://spec.commonmark.org/0.30/#emphasis-and-strong-emphasis
